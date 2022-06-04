@@ -1,60 +1,44 @@
 ﻿using System;
 using System.Linq;
-using System.Collections.Generic;
 
 namespace SequenceOfDifferentPairs
 {
-    public class SequenceOfDifferentPairs
+    internal class SequenceOfDifferentPairs
     {
         private const int Separator = -1;
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
-            var inputNumbers = Console.ReadLine()!.Split(' ').Select(x => int.Parse(x)).ToArray();
-            var pairsOfNumbers = new Dictionary<int, int>();
-            var numbers = new List<int>();
-            var isDivided = false;
+            var inputNumbers = Console.ReadLine().Split(' ').Select(x => int.Parse(x)).ToArray();
+            var pairs = inputNumbers.TakeWhile(p => p != Separator).ToArray();
+            var numbers = inputNumbers.Reverse().Skip(1).TakeWhile(n => n != Separator).Reverse().ToArray();
 
-
-            for (var i = 0; i < inputNumbers.Length; i++)
-            {
-                if (inputNumbers[i] != Separator && !isDivided)
-                {
-                    pairsOfNumbers.Add(inputNumbers[i], inputNumbers[i + 1]);
-                    i++;
-                }
-                else if (inputNumbers[i] != Separator && isDivided)
-                {
-                    numbers.Add(inputNumbers[i]);
-                }
-                else if (inputNumbers[i] == Separator && !isDivided)
-                {
-                    isDivided = true;
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            Console.Write(string.Join(" ", GetCorrectSequence(numbers, pairsOfNumbers)));
-
+            Console.Write(string.Join(" ", GetCorrectSequence(pairs, numbers)));
         }
 
-        private static int[] GetCorrectSequence(List<int> numbers, Dictionary<int, int> pairs)
+        private static int[] GetCorrectSequence(int[] pairs, int[] numbers)
         {
-            var outputList = new List<int>();
+            var output = new int[numbers.Length + 1];
+            var temp = 0;
 
-            for (var i = 0; i < numbers.Count; i++)
+            for (int i = 0; i < numbers.Length; i++)
             {
-                if (numbers[i] == pairs.ElementAt(i).Key)
-                    outputList.Add(pairs.ElementAt(i).Value);
+                if (temp >= pairs.Length)
+                {
+                    output[i] = 0;
+                    continue;
+                }
+
+                if (numbers[i] == pairs[temp])
+                    output[i] = pairs[temp + 1];
                 else
-                    outputList.Add(0);
+                    output[i] = 0;
+
+                temp += 2;
             }
 
-            outputList.Add(Separator);
+            output[numbers.Length] = Separator;
 
-            return outputList.ToArray();
+            return output;
         }
     }
 }
