@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace SequenceOfDifferentPairs
-{
-    internal class SequenceOfDifferentPairs
+    public class SequenceOfDifferentPairs
     {
         private const int Separator = -1;
         static void Main(string[] args)
@@ -13,27 +11,28 @@ namespace SequenceOfDifferentPairs
             var numbers = inputNumbers.Reverse().Skip(1).TakeWhile(n => n != Separator).Reverse().ToArray();
 
             Console.Write(string.Join(" ", GetCorrectSequence(pairs, numbers)));
+
         }
 
         private static int[] GetCorrectSequence(int[] pairs, int[] numbers)
         {
             var output = new int[numbers.Length + 1];
-            var temp = 0;
+            var counter = 0;
 
             for (int i = 0; i < numbers.Length; i++)
             {
-                if (temp >= pairs.Length)
+                if (counter >= pairs.Length)
                 {
                     output[i] = 0;
                     continue;
                 }
 
-                if (numbers[i] == pairs[temp])
-                    output[i] = pairs[temp + 1];
+                if (numbers[i] == pairs[counter])
+                    output[i] = pairs[counter + 1];
                 else
                     output[i] = 0;
 
-                temp += 2;
+                counter += 2;
             }
 
             output[numbers.Length] = Separator;
@@ -41,4 +40,3 @@ namespace SequenceOfDifferentPairs
             return output;
         }
     }
-}
