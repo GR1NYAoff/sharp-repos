@@ -1,42 +1,35 @@
 ﻿using System;
 using System.Linq;
+using System.Collections.Generic;
 
-    public class SequenceOfDifferentPairs
+    public class Program
     {
-        private const int Separator = -1;
         static void Main(string[] args)
         {
-            var inputNumbers = Console.ReadLine().Split(' ').Select(x => int.Parse(x)).ToArray();
-            var pairs = inputNumbers.TakeWhile(p => p != Separator).ToArray();
-            var numbers = inputNumbers.Reverse().Skip(1).TakeWhile(n => n != Separator).Reverse().ToArray();
-
-            Console.Write(string.Join(" ", GetCorrectSequence(pairs, numbers)));
-
-        }
-
-        private static int[] GetCorrectSequence(int[] pairs, int[] numbers)
-        {
-            var output = new int[numbers.Length + 1];
-            var counter = 0;
-
-            for (int i = 0; i < numbers.Length; i++)
+            Dictionary<int, int> pairs = new Dictionary<int, int>();
+            var input = Console.ReadLine().Split().Select(int.Parse).ToArray();
+            var len = Array.IndexOf(input, -1);
+        
+            for (var i = 0; i < len; i += 2)
             {
-                if (counter >= pairs.Length)
+                pairs.Add(input[i], input[i + 1]);
+            }
+        
+            for (var i = len + 1; i < input.Length - 1; i++)
+            {
+                if (pairs.ContainsKey(input[i]))
                 {
-                    output[i] = 0;
-                    continue;
+                    Console.Write(pairs[input[i]]);
+                }
+                else
+                {
+                    Console.Write(0);
                 }
 
-                if (numbers[i] == pairs[counter])
-                    output[i] = pairs[counter + 1];
-                else
-                    output[i] = 0;
-
-                counter += 2;
+                Console.Write(' ');
             }
 
-            output[numbers.Length] = Separator;
+            Console.Write(-1);
 
-            return output;
         }
     }
