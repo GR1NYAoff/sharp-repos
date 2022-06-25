@@ -16,7 +16,6 @@ namespace JsonResponseHttp
             var authorName = Console.ReadLine(); // J. K. Rowling | George R. R. Martin
             var authorsJson = Get(_authorUrl + authorName);
             var authors = JsonSerializer.Deserialize<RootAuthor>(authorsJson);
-            var cnt = 0;
 
             if (authors!.numFound <= 0 || authors.docs.All(d => d.work_count <= 0))
             {
@@ -32,76 +31,26 @@ namespace JsonResponseHttp
             Console.WriteLine($"Search results: ({validAuthors.Length})\n");
             for (int i = 0; i < validAuthors.Length; i++)
             {
-                Console.WriteLine($"{i + 1}) {validAuthors[i].name}");
                 var booksJson = Get(_authorBooksUrl + validAuthors[i].key + "/works.json");
+                var jsonObject = System.Text.Json.Nodes.JsonObject.Parse(booksJson);
+                var entriesJsonArray = jsonObject?["entries"]?.AsArray();
 
-                try
+                if (entriesJsonArray is null)
+                    continue;
+
+                Console.WriteLine($"{i + 1}) {validAuthors[i].name}");
+                Console.WriteLine($"Total ({entriesJsonArray.Count})");
+                Console.WriteLine($"Top work: {validAuthors[i].top_work}\n");
+
+                foreach (var entry in entriesJsonArray!)
                 {
-                    var books = JsonSerializer.Deserialize<RootBooksEx1>(booksJson);
-
-                    Console.WriteLine($"Books: ({books?.entries.Count}) \nTop work: {validAuthors[i].top_work}\n");
-
-                    foreach (var book in books!.entries)
-                    {
-                        Console.WriteLine(book.title);
-                    }
+                    Console.WriteLine(entry?["title"]);
                 }
-                catch (Exception)
-                {
-                    try
-                    {
-                        var books = JsonSerializer.Deserialize<RootBooksEx2>(booksJson);
-
-                        Console.WriteLine($"Books: ({books?.entries.Count}) \nTop work: {validAuthors[i].top_work}\n");
-
-                        foreach (var book in books!.entries)
-                        {
-                            Console.WriteLine(book.title);
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        try
-                        {
-                            var books = JsonSerializer.Deserialize<RootBooksEx3>(booksJson);
-
-                            Console.WriteLine($"Books: ({books?.entries.Count}) \nTop work: {validAuthors[i].top_work}\n");
-
-                            foreach (var book in books!.entries)
-                            {
-                                Console.WriteLine(book.title);
-                            }
-                        }
-                        catch (Exception)
-                        {
-                            try
-                            {
-                                var books = JsonSerializer.Deserialize<RootBooksEx4>(booksJson);
-
-                                Console.WriteLine($"Books: ({books?.entries.Count}) \nTop work: {validAuthors[i].top_work}\n");
-
-                                foreach (var book in books!.entries)
-                                {
-                                    Console.WriteLine(book.title);
-                                }
-                            }
-                            catch (Exception)
-                            {
-
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine(validAuthors[i].key);
-                                Console.ResetColor();
-                                cnt++;
-                            }
-                        }
-
-                    }
-                    
-                }
+               
                 
-                Console.WriteLine();
+                Console.WriteLine("___________________________________________\n");
             }
-            Console.WriteLine($"count error: {cnt}\n");
+
             Console.ReadKey();
         }
 

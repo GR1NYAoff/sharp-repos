@@ -1,6 +1,7 @@
 ﻿
 namespace JsonResponseHttp.Responses
 {
+    [Obsolete]
     public class RootBooksEx2
     {
         public LinksEx2 links { get; set; }

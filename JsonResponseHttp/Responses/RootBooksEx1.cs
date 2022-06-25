@@ -2,6 +2,7 @@
 namespace JsonResponseHttp.Responses
 {
     // AUTHOR BOOKS MODEL
+    [Obsolete]
     public class RootBooksEx1
     {
         public LinksEx1 links { get; set; }
