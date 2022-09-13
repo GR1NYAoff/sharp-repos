@@ -2,15 +2,27 @@
     <span class="oi oi-pencil me-2" aria-hidden="true"></span>
     <strong>@Title</strong>
 
-    <span class="text-nowrap">
-        Please take our
-        <a target="_blank" class="font-weight-bold link-dark" href="https://go.microsoft.com/fwlink/?linkid=2188693">brief survey</a>
-    </span>
-    and tell us what you think.
+    @if (isShow)
+    {
+        <div class="alert alert-success" role="alert">
+            <h4 class="alert-heading">Well done!</h4>
+            <p>Aww yeah, you successfully read this important alert message. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.</p>
+            <hr>
+            <p class="mb-0">Whenever you need to, be sure to use margin utilities to keep things nice and tidy.</p>
+        </div>
+    }
+    else
+    {
+        <button class="btn btn-danger" @onclick="ShowSpan">Show</button>
+    }
 </div>
 
 @code {
     // Demonstrates how a parent component can supply parameters
     [Parameter]
     public string Title { get; set; }
+    private bool isShow = false;
+    private void ShowSpan() {
+        isShow = true;
+    }
 }
