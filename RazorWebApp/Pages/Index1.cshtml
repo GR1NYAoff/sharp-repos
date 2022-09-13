@@ -1,0 +1,8 @@
+﻿@page
+@model RazorWebApp.Pages.Index1Model
+@{
+    ViewData["Title"] = "SomePage";
+}
+<h1>@ViewData["Title"]</h1>
+
+@await Html.PartialAsync("_GetList", new List<string>() {"Canada", "Ukraine", "America", "Grate Britan"});
