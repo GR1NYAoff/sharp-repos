@@ -3,13 +3,44 @@
 <h1>Counter</h1>
 
 <p role="status">Current count: @currentCount</p>
+<p>Current value: @SelectedItem</p>
 
-<button class="btn btn-success mb-3" @onclick="IncrementCount">Click me</button>
+<button class="btn btn-primary mb-3" @onclick="IncrementCount">Click me</button>
 <br />
-<button class="btn btn-danger" @onclick="DecrementCount">Click me</button>
+<button class="btn custom" @onclick="DecrementCount">Click me</button>
+
+<select @bind="CheckValue" class="form-select mt-4 form-select-lg mb-3" aria-label=".form-select-lg example">
+    <option selected>Open this select menu</option>
+    <option value="1">One</option>
+    <option value="2">Two</option>
+    <option value="3">Three</option>
+</select>
 
 @code {
     private int currentCount = 0;
+    private string SelectedItem { get; set; }
+
+    private string CheckValue
+    {
+        get
+        {
+            return SelectedItem;
+        }
+        set
+        {
+            ChangeEventArgs selectedEventArgs = new ChangeEventArgs();
+            selectedEventArgs.Value = value;
+            OnChangeSelected(selectedEventArgs);
+        }
+    }
+
+    private void OnChangeSelected(ChangeEventArgs e)
+    {
+        if (e.Value.ToString() != string.Empty)
+        {
+            SelectedItem = e.Value.ToString();
+        }
+    }
 
     private void IncrementCount()
     {
